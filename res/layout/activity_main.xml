@@ -8,9 +8,63 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
+    <ImageButton
+        android:id="@+id/btn_Play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:background="@null"
+        android:src="@drawable/play" />
 
+    <ImageButton
+        android:id="@+id/btn_Stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_Play"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/btn_Play"
+        android:background="@null"
+        android:src="@drawable/stop" />
+    
+    <ImageButton
+        android:id="@+id/btn_Pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_Play"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@+id/btn_Play"
+        android:background="@null"
+        android:src="@drawable/pause" />
+
+    <TextView
+        android:id="@+id/tv_SongTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Large Text"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/tv_ArtistName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_SongTitle"
+        android:layout_below="@+id/tv_SongTitle"
+        android:text="Medium Text"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <ImageView
+        android:id="@+id/iv_CoverArt"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_Play"
+        android:layout_alignLeft="@+id/tv_ArtistName"
+        android:layout_alignRight="@+id/tv_ArtistName"
+        android:layout_below="@+id/tv_ArtistName"
+        android:src="@drawable/no_pic" />
+    
 </RelativeLayout>
