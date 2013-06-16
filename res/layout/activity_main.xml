@@ -16,7 +16,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
         android:background="@null"
-        android:src="@drawable/play" />
+        android:src="@drawable/play"
+        android:onClick="Play" />
 
     <ImageButton
         android:id="@+id/btn_Stop"
@@ -26,7 +27,8 @@
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@+id/btn_Play"
         android:background="@null"
-        android:src="@drawable/stop" />
+        android:src="@drawable/stop"
+        android:onClick="Stop" />
     
     <ImageButton
         android:id="@+id/btn_Pause"
@@ -36,7 +38,8 @@
         android:layout_marginRight="12dp"
         android:layout_toLeftOf="@+id/btn_Play"
         android:background="@null"
-        android:src="@drawable/pause" />
+        android:src="@drawable/pause"
+        android:onClick="Pause" />
 
     <TextView
         android:id="@+id/tv_SongTitle"
@@ -44,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Large Text"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -54,7 +57,7 @@
         android:layout_alignLeft="@+id/tv_SongTitle"
         android:layout_below="@+id/tv_SongTitle"
         android:text="Medium Text"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <ImageView
