@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
 		case R.id.menu_Download:
 			Log.i(TAG, "Menu Download Clicked");
 			
+			///////////////////////////download started notification
+			
 			download_Manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
 	        Request request1 = new Request(Uri.parse(MainActivity.URL_MP3));
@@ -57,9 +59,10 @@ public class MainActivity extends Activity {
 	            @Override
 	            public void onReceive(Context context, Intent intent) {
 
-	                Toast.makeText(context, "Download complete", Toast.LENGTH_SHORT).show();
 	                long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
 	                uri_audio = download_Manager.getUriForDownloadedFile(id);
+	                
+	                //////////////////////////////////download complete notification
 	                
 	      	      	//get album cover
 	    	        ImageView iv = (ImageView) findViewById(R.id.iv_CoverArt);
@@ -101,10 +104,14 @@ public class MainActivity extends Activity {
 	    		if(media_player != null) 
 	    		{
 	    			media_player.start();
+	    			
+		    		//////////////////notification which won't go away
 	    		}       
 	    		else{
 	    		media_player = new MediaPlayer().create(this, uri_audio);
 	    		media_player.start();
+	    		
+	    		//////////////////notification which won't go away
 	    		}
 	    	}catch(Exception e){
 	    		
@@ -118,6 +125,8 @@ public class MainActivity extends Activity {
 	    public void Pause(View v){
 	    	if(media_player != null) {
 	    	media_player.pause();
+	    	
+    		//////////////////clear permanent notification
 	    	}
 	    }
 	    
@@ -126,6 +135,8 @@ public class MainActivity extends Activity {
 	    	if(media_player != null) {
 	    	media_player.pause();
 	    	media_player.seekTo(0);
+	    	
+    		//////////////////clear permanent notification
 	    	}
 	    }	
 	
