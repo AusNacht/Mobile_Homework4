@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.os.IBinder;
 
 public class PlaybackService extends Service {
-	
-    public Uri uri_audio;
-    public MediaPlayer media_player;
-    
+
+	public Uri uri_audio;
+	public MediaPlayer media_player;
+
 	public PlaybackService() {
 	}
 
@@ -19,43 +19,37 @@ public class PlaybackService extends Service {
 		// TODO: Return the communication channel to the service.
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
-	
-@Override
-public void onCreate(){
-	super.onCreate();
-	
-	//uri_audio = x;
-	media_player = new MediaPlayer().create(this, uri_audio);
-	media_player.start();
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		// uri_audio = x;
+		media_player = new MediaPlayer().create(this, uri_audio);
+		media_player.start();
+	}
+
+	public int onStartCommand(Intent intent, int flags, int startId) {
+
+		return Service.START_STICKY;
+	}
+
+	/*
+	 * onResume media_player.start();
+	 */
+
+	/*
+	 * onPause if(media_player != null) { media_player.pause();
+	 */
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		media_player.pause();
+		media_player.seekTo(0);
+
+		stopSelf();
+	}
 }
-
-
-  public int onStartCommand(Intent intent, int flags, int startId){
-	  
-	  return Service.START_STICKY;
-  }
- 
-
-/*
- * onResume
- * media_player.start();
- */
-
-/*
- * onPause
- * 	    	if(media_player != null) {
-	    	media_player.pause();
- */
-
-
-	
-@Override
-public void onDestroy(){
-	super.onDestroy();
-	
-	media_player.pause();
-	media_player.seekTo(0);
-	
-	 stopSelf();
-}
-}
+//
