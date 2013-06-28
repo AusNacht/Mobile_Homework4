@@ -48,6 +48,7 @@ public class DownloadService extends IntentService {
 		
         Intent i = new Intent("edu.fsu.cs.alathrop.mobile_homework4.UPDATE_READY");
         
+        //getApplicationContext().uri_audio = uri_audio;
         i.setData(uri_audio);
         PendingIntent pIntent = (PendingIntent) intent.getParcelableExtra("pending");
 
