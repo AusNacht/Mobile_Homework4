@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -28,13 +27,18 @@ public class MainActivity extends Activity {
 	public Uri uri_audio;
 	private long enqueue;
 	static DownloadManager download_Manager;
-	private MediaPlayer media_player;
 
 	final int NOTIFICATION_ID2 = 2;
 	NotificationManager mNotificationManager2;
 	Notification notification2;
 	Intent notificationIntent2;
 	PendingIntent contentIntent2;
+
+	Intent myIntent;
+	Intent playIntent = new Intent();
+	Intent pauseIntent = new Intent();
+	Intent stopIntent = new Intent();
+	Intent resumeIntent = new Intent();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,7 @@ public class MainActivity extends Activity {
 					R.drawable.ic_launcher, "Download Started",
 					System.currentTimeMillis());
 
-			//Intent notificationIntent = new Intent(this, MainActivity.class);
+			// Intent notificationIntent = new Intent(this, MainActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 					notificationIntent2, 0);
 
@@ -111,53 +115,35 @@ public class MainActivity extends Activity {
 					iv.setImageDrawable(getResources().getDrawable(
 							R.drawable.bm_pic));
 					// end get album cover
-					
+
 					String delims = "[/]+";
 					String[] tokens = URL_MP3.split(delims);
-					
+
 					String artist = tokens[4];
 					delims = "[-]+";
 					tokens = artist.split(delims);
 					artist = tokens[0];
 					artist = artist.replaceAll("_", " ");
-					
+
 					String song = tokens[1];
 					delims = "[.]+";
 					tokens = song.split(delims);
 					song = tokens[0];
 					song = song.replaceAll("_", " ");
-										
+
 					TextView tv_artist = (TextView) findViewById(R.id.tv_ArtistName);
 					TextView tv_song = (TextView) findViewById(R.id.tv_SongTitle);
 
 					tv_artist.setText(artist);
-					tv_song.setText(song);				
+					tv_song.setText(song);
+
+					finNotify();
 				}
 
 			}
 
 			registerReceiver(new MyDownloadReceiver(), new IntentFilter(
 					DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-			// ////////////////////////////////download complete notification
-			final int NOTIFICATION_ID3 = 3;
-			NotificationManager mNotificationManager3 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-			Notification notification3 = new Notification(
-					R.drawable.ic_launcher, "Download Started",
-					System.currentTimeMillis());
-
-			//Intent notificationIntent3 = new Intent(this, MainActivity.class);
-			PendingIntent contentIntent3 = PendingIntent.getActivity(this, 0,
-					notificationIntent2, 0);			
-			
-			notification3.setLatestEventInfo(this, "Homework 4",
-					"Download Completed", contentIntent3);
-
-			notification3.flags = Notification.FLAG_AUTO_CANCEL;
-
-			mNotificationManager3.notify(NOTIFICATION_ID3, notification3);
-			// ///////////////// end notification
 
 			return true;
 
@@ -168,14 +154,12 @@ public class MainActivity extends Activity {
 					contentIntent2);
 
 			mNotificationManager2.cancelAll();
-			
-			///////////////////////////////////////////////////////////////////////////////////////
-			if (media_player != null) {
-				media_player.pause();
-				media_player.seekTo(0);
-				}
-			
-			//////////////////////////////////////////////////////////////////////////////////////
+
+			// /////////////////////////////////////////////////////////////////////////////////////
+			stopIntent.setAction("ed.fsu.cs.alathrop.playbackservice.stop");
+			getApplicationContext().sendBroadcast(stopIntent);
+
+			// ////////////////////////////////////////////////////////////////////////////////////
 
 			finish();
 
@@ -191,70 +175,81 @@ public class MainActivity extends Activity {
 		// return true;
 	}
 
-	public void Play(View v) {
-		try {
-			if (media_player != null) {
+	public void onDestroy() {
+		super.onDestroy();
+		stopService(myIntent);
+	}
+	
+	private void sendMessageToService(int intvaluetosend){
+		
+	}
+
+	public void Play(View v) {	
+		playIntent.setAction("ed.fsu.cs.alathrop.playbackservice.play");
+		getApplicationContext().sendBroadcast(playIntent);
+		
 				notification2.setLatestEventInfo(this, "Homework 4", "Playing",
 						contentIntent2);
 
 				notification2.flags = Notification.FLAG_NO_CLEAR;
 
 				mNotificationManager2.notify(NOTIFICATION_ID2, notification2);
-
-				media_player.start();
-
 				// ////////////////notification which won't go away
-			} else {
-
-				notification2.setLatestEventInfo(this, "Homework 4", "Playing",
-						contentIntent2);
-
-				notification2.flags = Notification.FLAG_NO_CLEAR;
-
-				mNotificationManager2.notify(NOTIFICATION_ID2, notification2);
-
-				media_player = new MediaPlayer().create(this, uri_audio);
-				media_player.start();
-
-				// ////////////////notification which won't go away
-			}
-		} catch (Exception e) {
-
-		}
 	}
 
 	public void Resume(View v) {
-		media_player.start();
-		//start main.start()
+		resumeIntent.setAction("ed.fsu.cs.alathrop.playbackservice.resume");
+		getApplicationContext().sendBroadcast(resumeIntent);
 	}
 
 	public void Pause(View v) {
-		if (media_player != null) {
+		pauseIntent.setAction("ed.fsu.cs.alathrop.playbackservice.pause");
+		getApplicationContext().sendBroadcast(pauseIntent);
+		
 			notification2.setLatestEventInfo(this, "Homework 4", "Pause",
 					contentIntent2);
 
-			mNotificationManager2.cancel(NOTIFICATION_ID2);			
-			
-			media_player.pause();
+			mNotificationManager2.cancel(NOTIFICATION_ID2);
 
 			// ////////////////clear permanent notification
-		}
 	}
 
 	public void Stop(View v) {
+		stopIntent.setAction("ed.fsu.cs.alathrop.playbackservice.stop");
+		getApplicationContext().sendBroadcast(stopIntent);
 
-			if (media_player != null) {
 			notification2.setLatestEventInfo(this, "Homework 4", "Stop",
 					contentIntent2);
 
 			mNotificationManager2.cancel(NOTIFICATION_ID2);
 
-			media_player.pause();
-			media_player.seekTo(0);
-			}
-
-			// ////////////////clear permanent notification
+		// ////////////////clear permanent notification
 	}
 
+	public void finNotify() {
+
+		// ////////////////////////////////download complete notification
+		final int NOTIFICATION_ID3 = 3;
+		NotificationManager mNotificationManager3 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		Notification notification3 = new Notification(R.drawable.ic_launcher,
+				"Download Completed", System.currentTimeMillis());
+
+		// Intent notificationIntent3 = new Intent(this, MainActivity.class);
+		PendingIntent contentIntent3 = PendingIntent.getActivity(this, 0,
+				notificationIntent2, 0);
+
+		notification3.setLatestEventInfo(this, "Homework 4",
+				"Download Completed", contentIntent3);
+
+		notification3.flags = Notification.FLAG_AUTO_CANCEL;
+
+		mNotificationManager3.notify(NOTIFICATION_ID3, notification3);
+		// ///////////////// end notification
+		
+		myIntent = new Intent(this, PlaybackService.class);
+		myIntent.putExtra("uri", uri_audio);
+		startService(myIntent);
+	}
 }
 //

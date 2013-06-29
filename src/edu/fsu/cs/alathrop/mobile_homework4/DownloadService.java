@@ -39,19 +39,17 @@ public class DownloadService extends IntentService {
 
                 long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
                 uri_audio = download_Manager.getUriForDownloadedFile(id);
-                
-
             }
         }
-
-        registerReceiver(new MyDownloadReceiver(), new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-		
+        
         Intent i = new Intent("edu.fsu.cs.alathrop.mobile_homework4.UPDATE_READY");
         
         //getApplicationContext().uri_audio = uri_audio;
         i.setData(uri_audio);
         PendingIntent pIntent = (PendingIntent) intent.getParcelableExtra("pending");
 
+    	registerReceiver(new MyDownloadReceiver(), new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        
         try{
         	pIntent.send(getApplicationContext(), 1, intent);
         }catch(CanceledException e){
