@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
 		notification2 = new Notification(R.drawable.ic_launcher, "Playing",
 				System.currentTimeMillis());
 
-		notificationIntent2 = new Intent(this, MainActivity.class);
+		notificationIntent2 = this.getIntent();
 		contentIntent2 = PendingIntent.getActivity(this, 0,
 				notificationIntent2, 0);
 	}
@@ -77,9 +78,9 @@ public class MainActivity extends Activity {
 					R.drawable.ic_launcher, "Download Started",
 					System.currentTimeMillis());
 
-			Intent notificationIntent = new Intent(this, MainActivity.class);
+			//Intent notificationIntent = new Intent(this, MainActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-					notificationIntent, 0);
+					notificationIntent2, 0);
 
 			notification.setLatestEventInfo(this, "Homework 4",
 					"Download Started", contentIntent);
@@ -110,13 +111,27 @@ public class MainActivity extends Activity {
 					iv.setImageDrawable(getResources().getDrawable(
 							R.drawable.bm_pic));
 					// end get album cover
-
+					
+					String delims = "[/]+";
+					String[] tokens = URL_MP3.split(delims);
+					
+					String artist = tokens[4];
+					delims = "[-]+";
+					tokens = artist.split(delims);
+					artist = tokens[0];
+					artist = artist.replaceAll("_", " ");
+					
+					String song = tokens[1];
+					delims = "[.]+";
+					tokens = song.split(delims);
+					song = tokens[0];
+					song = song.replaceAll("_", " ");
+										
 					TextView tv_artist = (TextView) findViewById(R.id.tv_ArtistName);
 					TextView tv_song = (TextView) findViewById(R.id.tv_SongTitle);
 
-					// //////////////parse
-					tv_artist.setText("Bob Marley");
-					tv_song.setText("Jammin");
+					tv_artist.setText(artist);
+					tv_song.setText(song);				
 				}
 
 			}
@@ -132,9 +147,9 @@ public class MainActivity extends Activity {
 					R.drawable.ic_launcher, "Download Started",
 					System.currentTimeMillis());
 
-			Intent notificationIntent3 = new Intent(this, MainActivity.class);
+			//Intent notificationIntent3 = new Intent(this, MainActivity.class);
 			PendingIntent contentIntent3 = PendingIntent.getActivity(this, 0,
-					notificationIntent3, 0);			
+					notificationIntent2, 0);			
 			
 			notification3.setLatestEventInfo(this, "Homework 4",
 					"Download Completed", contentIntent3);
@@ -153,11 +168,14 @@ public class MainActivity extends Activity {
 					contentIntent2);
 
 			mNotificationManager2.cancelAll();
-
+			
+			///////////////////////////////////////////////////////////////////////////////////////
 			if (media_player != null) {
 				media_player.pause();
 				media_player.seekTo(0);
-			}
+				}
+			
+			//////////////////////////////////////////////////////////////////////////////////////
 
 			finish();
 
@@ -207,11 +225,12 @@ public class MainActivity extends Activity {
 
 	public void Resume(View v) {
 		media_player.start();
+		//start main.start()
 	}
 
 	public void Pause(View v) {
 		if (media_player != null) {
-			notification2.setLatestEventInfo(this, "Homework 4", "Stop",
+			notification2.setLatestEventInfo(this, "Homework 4", "Pause",
 					contentIntent2);
 
 			mNotificationManager2.cancel(NOTIFICATION_ID2);			
@@ -223,8 +242,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void Stop(View v) {
-		if (media_player != null) {
 
+			if (media_player != null) {
 			notification2.setLatestEventInfo(this, "Homework 4", "Stop",
 					contentIntent2);
 
@@ -232,9 +251,9 @@ public class MainActivity extends Activity {
 
 			media_player.pause();
 			media_player.seekTo(0);
+			}
 
 			// ////////////////clear permanent notification
-		}
 	}
 
 }
